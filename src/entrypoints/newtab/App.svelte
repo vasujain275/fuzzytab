@@ -1,21 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { urls, errorMessage, fetchBookmarks } from "./bookmarks";
-
-  onMount(() => {
-    fetchBookmarks();
-  });
+  import SearchCard from "./lib/SearchCard.svelte";
 </script>
 
-<main>
-  <h1 class="text-sky-500">Hello</h1>
-  {#if $errorMessage}
-    <p class="text-red-500">{$errorMessage}</p>
-  {:else}
-    <ul>
-      {#each $urls as bookmark}
-        <li>{bookmark.title}</li>
-      {/each}
-    </ul>
-  {/if}
-</main>
+<div class="flex justify-center items-center h-screen w-screen">
+  <div
+    class="sm:w-2/5 sm:h-3/4 w-3/4 h-3/4 bg-sec text-white rounded-lg shadow-xl"
+  >
+    <SearchCard />
+  </div>
+</div>
