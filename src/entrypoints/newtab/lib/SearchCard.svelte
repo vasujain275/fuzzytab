@@ -1,14 +1,14 @@
 <script lang="ts">
+import Fuse from "fuse.js";
 import { onMount } from "svelte";
-import SearchIcon from "../../../assets/settings.svg";
+import { type Writable, writable } from "svelte/store";
+import SettingsIcon from "../../../assets/settings.svg";
 import {
   type BookmarkType,
   bookmarksArray,
   errorMessage,
   fetchBookmarks,
 } from "../bookmarks";
-import Fuse from "fuse.js";
-import { type Writable, writable } from "svelte/store";
 
 const searchQuery: Writable<string> = writable("");
 const filteredBookmarks: Writable<BookmarkType[]> = writable([]);
@@ -34,7 +34,7 @@ function updateFilteredBookmarks(
 
   const fuse = new Fuse(bookmarks, {
     keys: ["title", "url"],
-    threshold: 0.7,
+    threshold: 0.3,
   });
 
   const result: BookmarkType[] = fuse
@@ -48,7 +48,7 @@ function updateFilteredBookmarks(
   <div class="row-span-2">
     <div class="w-full h-9 grid grid-cols-12 text-white">
       <div class="col-span-1 p-4 flex justify-center items-center sm:col-span-1 md:col-span-1 lg:col-span-1">
-        <img src={SearchIcon} alt="search" class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-6 lg:h-6" />
+        <img src={SettingsIcon} alt="search" class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-6 lg:h-6" />
       </div>
       <div class="col-span-10 flex items-center">
         <input

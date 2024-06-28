@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { browser } from "wxt/browser";
 
-export type BookmarkType = {
+export type FetchedBookmarkType = {
   id: string;
   title: string;
   index: number;
@@ -11,31 +11,52 @@ export type BookmarkType = {
   parentId: string;
 };
 
-export const bookmarksArray = writable<BookmarkType[]>([]);
+export type BookmarkType = {
+  id: string;
+  title: string;
+  index: number;
+  dateAdded: number;
+  type: "bookmark";
+  url: string;
+  parentId: string;
+  alias: string | undefined;
+  isSearchable: boolean;
+};
+
+export const bookmarksArray = writable<FetchedBookmarkType[]>([]);
 export const errorMessage = writable<string | null>(null);
 
 async function fetchBookmarks() {
   try {
     const bookmarks = await browser.bookmarks.getTree();
-    const bookmarksWithUrls: any[] | undefined = extractBookmarksWithUrl(
-      bookmarks[0].children
-    );
+    const bookmarksWithUrls: FetchedBookmarkType[] | undefined =
+      extractBookmarksWithUrl(bookmarks[0].children);
     bookmarksArray.set(bookmarksWithUrls);
     console.log(bookmarksWithUrls);
-  } catch (error: any) {
+  } catch (error) {
     errorMessage.set(`Failed to fetch bookmarks: ${error.message}`);
     console.error(errorMessage, error);
   }
 }
 
 function extractBookmarksWithUrl(
-  bookmarkNode: any[] | undefined
+  bookmarkNode: BookmarksType[] | undefined
 ): BookmarkType[] {
-  const bookmarksWithUrl: BookmarkType[] = [];
+  const bookmarksWithUrl: FetchedBookmarkType[] = [];
 
-  function recurse(node: any) {
+  function recurse(node: FetchedBookmarkType) {
     if (node.url) {
-      bookmarksWithUrl.push(node as BookmarkType);
+      let alias: string;
+      let ifSearchable = false;
+      const match = node.title.match(/\(([^)]+)\)$/);
+      if (match) {
+        alias = match[1];
+      }
+      if (node.title[0] === "!") {
+        isSearchable = true;
+      }
+      const newNode = { ...node, alias, isSearchable };
+      bookmarksWithUrl.push(newNode);
     }
     if (node.children) {
       node.children.forEach(recurse);
@@ -45,9 +66,9 @@ function extractBookmarksWithUrl(
   if (bookmarkNode) {
     bookmarkNode.forEach(recurse);
     return bookmarksWithUrl;
-  } else {
-    return [];
   }
+
+  return [];
 }
 
 export { fetchBookmarks };
