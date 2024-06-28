@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { browser } from "wxt/browser";
 
-type BookmarkType = {
+export type BookmarkType = {
   id: string;
   title: string;
   index: number;
@@ -18,7 +18,7 @@ async function fetchBookmarks() {
   try {
     const bookmarks = await browser.bookmarks.getTree();
     const bookmarksWithUrls: any[] | undefined = extractBookmarksWithUrl(
-      bookmarks[0].children,
+      bookmarks[0].children
     );
     bookmarksArray.set(bookmarksWithUrls);
     console.log(bookmarksWithUrls);
@@ -29,7 +29,7 @@ async function fetchBookmarks() {
 }
 
 function extractBookmarksWithUrl(
-  bookmarkNode: any[] | undefined,
+  bookmarkNode: any[] | undefined
 ): BookmarkType[] {
   const bookmarksWithUrl: BookmarkType[] = [];
 
