@@ -9,14 +9,21 @@ import { browser } from "wxt/browser";
 const searchQuery = writable("");
 const filteredBookmarks = writable([]);
 let inputElement;
+let tab;
+// setInterval(() => {
+//   console.log(tab);
+// }, 10000);
 
 onMount(async () => {
-  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   console.log(tab);
+  //
+  // browser.tabs.update({
+  //   active: true,
+  //   highlighted: true,
+  // });
 
-  if (inputElement) {
-    inputElement.focus();
-  }
+  inputElement.focus();
 
   fetchBookmarks();
   bookmarksArray.subscribe((bookmarks) => {
@@ -80,6 +87,7 @@ const openLink = (event) => {
           on:keydown={openLink}
           bind:value={$searchQuery}
           bind:this={inputElement}
+          autofocus
         />
       </div>
       <div class="col-span-1 flex justify-center items-center sm:col-span-1 md:col-span-1 lg:col-span-1">
