@@ -1,47 +1,69 @@
-<script lang="ts">
+<script>
 import Fuse from "fuse.js";
 import { onMount } from "svelte";
-import { type Writable, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import SettingsIcon from "../../../assets/settings.svg";
-import {
-  type BookmarkType,
-  bookmarksArray,
-  errorMessage,
-  fetchBookmarks,
-} from "../bookmarks";
+import { bookmarksArray, errorMessage, fetchBookmarks } from "../bookmarks";
+import { browser } from "wxt/browser";
 
-const searchQuery: Writable<string> = writable("");
-const filteredBookmarks: Writable<BookmarkType[]> = writable([]);
+const searchQuery = writable("");
+const filteredBookmarks = writable([]);
+let inputElement;
 
-onMount(() => {
+onMount(async () => {
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  console.log(tab);
+
+  if (inputElement) {
+    inputElement.focus();
+  }
+
   fetchBookmarks();
-  bookmarksArray.subscribe((bookmarks: BookmarkType[]) => {
+  bookmarksArray.subscribe((bookmarks) => {
     updateFilteredBookmarks(bookmarks, $searchQuery);
   });
-  searchQuery.subscribe((query: string) => {
+  searchQuery.subscribe((query) => {
     updateFilteredBookmarks($bookmarksArray, query);
   });
 });
 
-function updateFilteredBookmarks(
-  bookmarks: BookmarkType[],
-  query: string
-): void {
+function updateFilteredBookmarks(bookmarks, query) {
   if (query.trim() === "") {
     filteredBookmarks.set(bookmarks);
     return;
   }
 
   const fuse = new Fuse(bookmarks, {
-    keys: ["title", "url"],
+    keys: [
+      {
+        name: "title",
+        weight: 3,
+      },
+      {
+        name: "url",
+        weight: 0.3,
+      },
+      {
+        name: "alias",
+        weight: 5,
+      },
+    ],
     threshold: 0.3,
   });
 
-  const result: BookmarkType[] = fuse
-    .search(query)
-    .map((result) => result.item);
+  const result = fuse.search(query).map((result) => result.item);
   filteredBookmarks.set(result);
 }
+
+const openLink = (event) => {
+  if (event.key === "Enter") {
+    if (!$filteredBookmarks[0]) {
+      window.location.href = `https://www.google.com/search?q=${encodeURIComponent($searchQuery)}`;
+    }
+    const url = $filteredBookmarks[0].url;
+    window.location.href = url;
+  }
+};
 </script>
 
 <main class="p-6 w-full h-full grid grid-rows-12">
@@ -55,7 +77,9 @@ function updateFilteredBookmarks(
           type="text"
           placeholder="Search bookmarks"
           class="w-full h-full bg-zinc-500 text-white px-4 py-1 rounded-md"
+          on:keydown={openLink}
           bind:value={$searchQuery}
+          bind:this={inputElement}
         />
       </div>
       <div class="col-span-1 flex justify-center items-center sm:col-span-1 md:col-span-1 lg:col-span-1">
@@ -71,7 +95,7 @@ function updateFilteredBookmarks(
         {#each $filteredBookmarks as bookmark (bookmark.id)}
           <li class="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded-lg">
             <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-              <span class="text-sm">{bookmark.title[0]}</span>
+              <span class="text-sm text-black">{bookmark.title[0]}</span>
             </div>
             <div>
               <h2 class="text-lg font-semibold text-white">{bookmark.title}</h2>

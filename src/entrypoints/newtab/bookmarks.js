@@ -1,36 +1,13 @@
 import { writable } from "svelte/store";
 import { browser } from "wxt/browser";
 
-export type FetchedBookmarkType = {
-  id: string;
-  title: string;
-  index: number;
-  dateAdded: number;
-  type: "bookmark";
-  url: string;
-  parentId: string;
-};
-
-export type BookmarkType = {
-  id: string;
-  title: string;
-  index: number;
-  dateAdded: number;
-  type: "bookmark";
-  url: string;
-  parentId: string;
-  alias: string | undefined;
-  isSearchable: boolean;
-};
-
-export const bookmarksArray = writable<FetchedBookmarkType[]>([]);
-export const errorMessage = writable<string | null>(null);
+export const bookmarksArray = writable([]);
+export const errorMessage = writable(null);
 
 async function fetchBookmarks() {
   try {
     const bookmarks = await browser.bookmarks.getTree();
-    const bookmarksWithUrls: FetchedBookmarkType[] | undefined =
-      extractBookmarksWithUrl(bookmarks[0].children);
+    const bookmarksWithUrls = extractBookmarksWithUrl(bookmarks[0].children);
     bookmarksArray.set(bookmarksWithUrls);
     console.log(bookmarksWithUrls);
   } catch (error) {
@@ -39,20 +16,19 @@ async function fetchBookmarks() {
   }
 }
 
-function extractBookmarksWithUrl(
-  bookmarkNode: BookmarksType[] | undefined
-): BookmarkType[] {
-  const bookmarksWithUrl: FetchedBookmarkType[] = [];
+function extractBookmarksWithUrl(bookmarkNode) {
+  const bookmarksWithUrl = [];
 
-  function recurse(node: FetchedBookmarkType) {
+  function recurse(node) {
     if (node.url) {
-      let alias: string;
-      let ifSearchable = false;
+      let alias;
+      let isSearchable = false;
       const match = node.title.match(/\(([^)]+)\)$/);
       if (match) {
         alias = match[1];
       }
       if (node.title[0] === "!") {
+        node.title = node.title.charAt(1).toUpperCase() + node.title.slice(2);
         isSearchable = true;
       }
       const newNode = { ...node, alias, isSearchable };
