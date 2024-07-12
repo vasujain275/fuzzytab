@@ -10,9 +10,6 @@ const searchQuery = writable("");
 const filteredBookmarks = writable([]);
 let inputElement;
 let tab;
-// setInterval(() => {
-//   console.log(tab);
-// }, 10000);
 
 onMount(async () => {
   [tab] = await browser.tabs.query({ active: true, currentWindow: true });
@@ -87,7 +84,7 @@ const openLink = (event) => {
           on:keydown={openLink}
           bind:value={$searchQuery}
           bind:this={inputElement}
-          autofocus
+          id="inputElement"
         />
       </div>
       <div class="col-span-1 flex justify-center items-center sm:col-span-1 md:col-span-1 lg:col-span-1">
