@@ -1,24 +1,16 @@
 <script>
-  import Fuse from "fuse.js";
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import SettingsIcon from "../../../assets/settings.svg";
-  import { bookmarksArray, errorMessage, fetchBookmarks } from "../bookmarks";
-  //import { browser } from "wxt/browser";
-
-  const searchQuery = writable("");
-  const filteredBookmarks = writable([]);
-  const selectedBookmarkIndex = writable(-1);
+  import { fetchBookmarks, updateFilteredBookmarks } from "../utils/bookmarks";
+  import {isValidURL, makeBrowsableURL} from "../utils/urls"
+  import { bookmarksArray, errorMessage, searchQuery, filteredBookmarks, selectedBookmarkIndex} from "../utils/store";
+  
   let inputElement;
-  //let tab;
 
   onMount(async () => {
-    //[tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    //console.log(tab);
-
     inputElement.focus();
-
     fetchBookmarks();
+
     bookmarksArray.subscribe((bookmarks) => {
       updateFilteredBookmarks(bookmarks, $searchQuery);
     });
@@ -27,46 +19,15 @@
     });
   });
 
-  function updateFilteredBookmarks(bookmarks, query) {
-    if (query.trim() === "") {
-      filteredBookmarks.set(bookmarks);
-      selectedBookmarkIndex.set(-1);
-      return;
-    }
-
-    const fuse = new Fuse(bookmarks, {
-      keys: [
-        {
-          name: "title",
-          weight: 3,
-        },
-        {
-          name: "url",
-          weight: 0.3,
-        },
-        {
-          name: "alias",
-          weight: 5,
-        },
-      ],
-      threshold: 0.3,
-    });
-
-    const result = fuse.search(query).map((result) => result.item);
-    filteredBookmarks.set(result);
-
-    // Select the top index if there are results
-    if (result.length > 0) {
-      selectedBookmarkIndex.set(0);
-    } else {
-      selectedBookmarkIndex.set(-1);
-    }
-  }
 
   const openLink = (event) => {
     if (event.key === "Enter") {
       if (!$filteredBookmarks.length) {
+        if (isValidURL($searchQuery)){
+        window.location.href = makeBrowsableURL($searchQuery);
+        } else{
         window.location.href = `https://www.google.com/search?q=${encodeURIComponent($searchQuery)}`;
+        }
       } else if ($selectedBookmarkIndex >= 0 && $selectedBookmarkIndex < $filteredBookmarks.length) {
         const url = $filteredBookmarks[$selectedBookmarkIndex].url;
         window.location.href = url;

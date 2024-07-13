@@ -1,8 +1,12 @@
-import { writable } from "svelte/store";
+import Fuse from "fuse.js";
 import { browser } from "wxt/browser";
 
-export const bookmarksArray = writable([]);
-export const errorMessage = writable(null);
+import {
+  bookmarksArray,
+  errorMessage,
+  filteredBookmarks,
+  selectedBookmarkIndex,
+} from "./store";
 
 async function fetchBookmarks() {
   try {
@@ -47,4 +51,40 @@ function extractBookmarksWithUrl(bookmarkNode) {
   return [];
 }
 
-export { fetchBookmarks };
+function updateFilteredBookmarks(bookmarks, query) {
+  if (query.trim() === "") {
+    filteredBookmarks.set(bookmarks);
+    selectedBookmarkIndex.set(-1);
+    return;
+  }
+
+  const fuse = new Fuse(bookmarks, {
+    keys: [
+      {
+        name: "title",
+        weight: 3,
+      },
+      //{
+      //  name: "url",
+      //  weight: 0.3,
+      //},
+      {
+        name: "alias",
+        weight: 5,
+      },
+    ],
+    threshold: 0.3,
+  });
+
+  const result = fuse.search(query).map((result) => result.item);
+  filteredBookmarks.set(result);
+
+  // Select the top index if there are results
+  if (result.length > 0) {
+    selectedBookmarkIndex.set(0);
+  } else {
+    selectedBookmarkIndex.set(-1);
+  }
+}
+
+export { fetchBookmarks, updateFilteredBookmarks };
