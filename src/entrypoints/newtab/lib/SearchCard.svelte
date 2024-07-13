@@ -89,7 +89,7 @@
         <input
           type="text"
           placeholder="Search bookmarks"
-          class="w-full h-full bg-zinc-500 text-white px-4 py-1 rounded-md"
+          class="w-full h-full bg-zinc-500 text-white px-4 py-1 rounded-md text-lg"
           on:keydown={openLink}
           bind:value={$searchQuery}
           bind:this={inputElement}
@@ -120,9 +120,3 @@
     {/if}
   </div>
 </main>
-
-<style>
-  .selected {
-    background-color: #4A5568;
-  }
-</style>
