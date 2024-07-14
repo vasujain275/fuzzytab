@@ -13,7 +13,6 @@ async function fetchBookmarks() {
     const bookmarks = await browser.bookmarks.getTree();
     const bookmarksWithUrls = extractBookmarksWithUrl(bookmarks[0].children);
     bookmarksArray.set(bookmarksWithUrls);
-    console.log(bookmarksWithUrls);
   } catch (error) {
     errorMessage.set(`Failed to fetch bookmarks: ${error.message}`);
     console.error(errorMessage, error);

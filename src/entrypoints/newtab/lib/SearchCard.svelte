@@ -1,8 +1,9 @@
 <script>
   import { onMount } from "svelte";
+  import validUrl from "valid-url"
   import SettingsIcon from "../../../assets/settings.svg";
   import { fetchBookmarks, updateFilteredBookmarks } from "../utils/bookmarks";
-  import {isValidURL, makeBrowsableURL} from "../utils/urls"
+  import {makeBrowsableURL} from "../utils/urls"
   import { bookmarksArray, errorMessage, searchQuery, filteredBookmarks, selectedBookmarkIndex} from "../utils/store";
   
   let inputElement;
@@ -23,7 +24,7 @@
   const openLink = (event) => {
     if (event.key === "Enter") {
       if (!$filteredBookmarks.length) {
-        if (isValidURL($searchQuery)){
+        if (validUrl.isUri($searchQuery)){
         window.location.href = makeBrowsableURL($searchQuery);
         } else{
         window.location.href = `https://www.google.com/search?q=${encodeURIComponent($searchQuery)}`;

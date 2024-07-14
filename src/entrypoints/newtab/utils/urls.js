@@ -1,20 +1,7 @@
-function isValidURL(str) {
-  const pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol (optional)
-      "((([a-zA-Z0-9$-_.+!*'(),;:&=]|%[0-9a-fA-F]{2})+)(:[0-9]+)?@)?" + // username:password@ (optional)
-      "((\\[(IPv6:[0-9a-fA-F:.]+|[0-9a-fA-F:.]+)\\])|" + // IPv6 (optional)
-      "(([a-zA-Z0-9$-_.+!*'(),;:&=]|%[0-9a-fA-F]{2})+\\.)*" + // subdomain (optional)
-      "(([a-zA-Z0-9$-_.+!*'(),;:&=]|%[0-9a-fA-F]{2}){2,}))" + // domain
-      "(:[0-9]+)?" + // port (optional)
-      "(\\/(([a-zA-Z0-9$-_.+!*'(),;:@&=]|%[0-9a-fA-F]{2})*\\/?)*)?" + // path (optional)
-      "(\\?(([a-zA-Z0-9$-_.+!*'(),;:@&=]|%[0-9a-fA-F]{2})+=[a-zA-Z0-9$-_.+!*'(),;:@&=]*(&([a-zA-Z0-9$-_.+!*'(),;:@&=]|%[0-9a-fA-F]{2})+=[a-zA-Z0-9$-_.+!*'(),;:@&=]*)*)?)?" + // query string (optional)
-      "(#(([a-zA-Z0-9$-_.+!*'(),;:@&=]|%[0-9a-fA-F]{2})*))?$",
-  ); // fragment (optional)
-  return pattern.test(str);
-}
+import validUrl from "valid-url";
 
 function makeBrowsableURL(url) {
-  if (!isValidURL(url)) {
+  if (validUrl.isUri(url)) {
     return null;
   }
 
@@ -34,4 +21,4 @@ function makeBrowsableURL(url) {
   return `http://${url}`;
 }
 
-export { isValidURL, makeBrowsableURL };
+export { makeBrowsableURL };
