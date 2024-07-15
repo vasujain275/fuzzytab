@@ -1,6 +1,6 @@
 import { browser } from "wxt/browser";
 export default defineBackground(() => {
-  console.log("Hello background!", { id: browser.runtime.id });
+  //console.log("Hello background!", { id: browser.runtime.id });
   function loadStart() {
     browser.tabs.update({
       url: "newtab.html",
