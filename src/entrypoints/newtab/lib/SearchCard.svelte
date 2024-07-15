@@ -46,7 +46,7 @@
   };
 
   const handleBookmarkOpen = (bookmark) => {
-    if (bookmark.isSearchable) {
+    if (bookmark?.isSearchable) {
       $bangUrl = bookmark.url;
       navigate("/bang-search");
     } else if (!$filteredBookmarks.length) {
