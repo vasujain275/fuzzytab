@@ -1,8 +1,10 @@
 <script>
-  import { onMount } from "svelte";
+  import { storage } from "wxt/storage";
+  import { onDestroy, onMount } from "svelte";
   import validUrl from "valid-url";
   import SettingsIcon from "../../../assets/settings.svg";
-  import { fetchBookmarks, updateFilteredBookmarks } from "../utils/bookmarks";
+  import { updateFilteredBookmarks, fetchBookmarks } from "../utils/bookmarks";
+  import { setBookmarks, updateCountById } from "../utils/localStorage";
   import { makeBrowsableURL } from "../utils/urls";
   import {
     bookmarksArray,
@@ -18,7 +20,25 @@
 
   onMount(async () => {
     inputElement.focus();
-    fetchBookmarks();
+    const bookmarksTree = await storage.getItem("local:bookmarksTree");
+
+    if (!bookmarksTree) {
+      await setBookmarks();
+    }
+    const fetchedBookmarks = await fetchBookmarks();
+
+    $bookmarksArray = await storage.getItem("local:bookmarksTree");
+    $bookmarksArray.sort((a, b) => b.count - a.count);
+
+    if (fetchedBookmarks.length !== $bookmarksArray.length) {
+      const lengthDifference = fetchedBookmarks.length - $bookmarksArray.length;
+
+      if (lengthDifference > 0) {
+        const elementsToAdd = fetchedBookmarks.slice(-lengthDifference);
+        $bookmarksArray.push(...elementsToAdd);
+        await storage.setItem("local:bookmarksTree", $bookmarksArray);
+      }
+    }
 
     bookmarksArray.subscribe((bookmarks) => {
       updateFilteredBookmarks(bookmarks, $searchQuery);
@@ -32,10 +52,10 @@
     navigate("/settings");
   };
 
-  const openLink = (event) => {
+  const openLink = async (event) => {
     const bookmark = $filteredBookmarks[$selectedBookmarkIndex];
     if (event.key === "Enter") {
-      handleBookmarkOpen(bookmark);
+      await handleBookmarkOpen(bookmark);
     } else if (event.key === "ArrowDown") {
       selectedBookmarkIndex.update((n) => (n + 1) % $filteredBookmarks.length);
     } else if (event.key === "ArrowUp") {
@@ -45,7 +65,11 @@
     }
   };
 
-  const handleBookmarkOpen = (bookmark) => {
+  const handleBookmarkOpen = async (bookmark) => {
+    if (bookmark) {
+      updateCountById(bookmark.id);
+      await storage.setItem("local:bookmarksTree", $bookmarksArray);
+    }
     if (bookmark?.isSearchable) {
       $bangUrl = bookmark.url;
       navigate("/bang-search");
@@ -55,14 +79,13 @@
       } else {
         window.location.href = `https://www.google.com/search?q=${encodeURIComponent($searchQuery)}`;
       }
-    } else if (
-      $selectedBookmarkIndex >= 0 &&
-      $selectedBookmarkIndex < $filteredBookmarks.length
-    ) {
+    } else {
       const url = bookmark.url;
       window.location.href = url;
     }
   };
+
+  onDestroy(async () => {});
 
   const handleBookmarkClick = (bookmark, index) => {
     selectedBookmarkIndex.set(index);
@@ -109,21 +132,29 @@
       <ul class="space-y-2">
         {#each $filteredBookmarks as bookmark, index (bookmark.id)}
           <li
-            class="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded-lg {index ===
+            class="flex items-center justify-between p-2 hover:bg-gray-700 rounded-lg {index ===
             $selectedBookmarkIndex
               ? 'bg-gray-700'
               : ''}"
             on:click={() => handleBookmarkClick(bookmark, index)}
           >
-            <!-- Initial Character Circle -->
-            <div
-              class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center"
-            >
-              <span class="text-sm text-black">{bookmark.title[0]}</span>
+            <div class="flex items-center space-x-2">
+              <!-- Initial Character Circle -->
+              <div
+                class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center"
+              >
+                <span class="text-sm text-black">{bookmark.title[0]}</span>
+              </div>
+              <!-- Bookmark Title -->
+              <div>
+                <h2 class="text-lg font-semibold text-white">
+                  {bookmark.title}
+                </h2>
+              </div>
             </div>
-            <!-- Bookmark Title -->
-            <div>
-              <h2 class="text-lg font-semibold text-white">{bookmark.title}</h2>
+            <!-- Bookmark Count -->
+            <div class="text-white">
+              {bookmark.count}
             </div>
           </li>
         {/each}

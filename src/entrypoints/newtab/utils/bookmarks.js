@@ -2,7 +2,6 @@ import Fuse from "fuse.js";
 import { browser } from "wxt/browser";
 
 import {
-  bookmarksArray,
   errorMessage,
   filteredBookmarks,
   selectedBookmarkIndex,
@@ -12,7 +11,7 @@ async function fetchBookmarks() {
   try {
     const bookmarks = await browser.bookmarks.getTree();
     const bookmarksWithUrls = extractBookmarksWithUrl(bookmarks[0].children);
-    bookmarksArray.set(bookmarksWithUrls);
+    return bookmarksWithUrls;
   } catch (error) {
     errorMessage.set(`Failed to fetch bookmarks: ${error.message}`);
     console.error(errorMessage, error);
@@ -34,7 +33,7 @@ function extractBookmarksWithUrl(bookmarkNode) {
         node.title = node.title.charAt(1).toUpperCase() + node.title.slice(2);
         isSearchable = true;
       }
-      const newNode = { ...node, alias, isSearchable };
+      const newNode = { ...node, alias, isSearchable, count: 0 };
       bookmarksWithUrl.push(newNode);
     }
     if (node.children) {
@@ -51,6 +50,7 @@ function extractBookmarksWithUrl(bookmarkNode) {
 }
 
 function updateFilteredBookmarks(bookmarks, query) {
+  bookmarks.sort((a, b) => b.count - a.count);
   if (query.trim() === "") {
     filteredBookmarks.set(bookmarks);
     selectedBookmarkIndex.set(-1);
