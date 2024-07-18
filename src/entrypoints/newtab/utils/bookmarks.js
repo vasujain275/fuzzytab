@@ -12,7 +12,7 @@ async function fetchBookmarks() {
   try {
     const bookmarks = await browser.bookmarks.getTree();
     const bookmarksWithUrls = extractBookmarksWithUrl(bookmarks[0].children);
-    bookmarksArray.set(bookmarksWithUrls);
+    return bookmarksWithUrls;
   } catch (error) {
     errorMessage.set(`Failed to fetch bookmarks: ${error.message}`);
     console.error(errorMessage, error);
@@ -34,7 +34,7 @@ function extractBookmarksWithUrl(bookmarkNode) {
         node.title = node.title.charAt(1).toUpperCase() + node.title.slice(2);
         isSearchable = true;
       }
-      const newNode = { ...node, alias, isSearchable };
+      const newNode = { ...node, alias, isSearchable, count: 0 };
       bookmarksWithUrl.push(newNode);
     }
     if (node.children) {
