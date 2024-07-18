@@ -2,7 +2,6 @@ import Fuse from "fuse.js";
 import { browser } from "wxt/browser";
 
 import {
-  bookmarksArray,
   errorMessage,
   filteredBookmarks,
   selectedBookmarkIndex,
@@ -51,6 +50,7 @@ function extractBookmarksWithUrl(bookmarkNode) {
 }
 
 function updateFilteredBookmarks(bookmarks, query) {
+  bookmarks.sort((a, b) => b.count - a.count);
   if (query.trim() === "") {
     filteredBookmarks.set(bookmarks);
     selectedBookmarkIndex.set(-1);

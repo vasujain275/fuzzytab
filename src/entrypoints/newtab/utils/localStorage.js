@@ -8,4 +8,15 @@ async function setBookmarks() {
   bookmarksArray.set(bookmarks);
 }
 
-export { setBookmarks };
+function updateCountById(id) {
+  bookmarksArray.update((arr) => {
+    return arr.map((obj) => {
+      if (obj.id === id) {
+        return { ...obj, count: obj.count + 1 };
+      }
+      return obj;
+    });
+  });
+}
+
+export { setBookmarks, updateCountById };
