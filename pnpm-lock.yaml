@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      fuse.js:
-        specifier: ^7.0.0
-        version: 7.0.0
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.8.3
@@ -36,6 +32,9 @@ importers:
       eslint-plugin-svelte:
         specifier: ^2.42.0
         version: 2.42.0(eslint@9.6.0)(svelte@4.2.18)
+      fuse.js:
+        specifier: ^7.0.0
+        version: 7.0.0
       globals:
         specifier: ^15.8.0
         version: 15.8.0
