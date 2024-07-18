@@ -6,11 +6,8 @@
 
   let bangInputElement;
 
-  const getBack = (event) => {
-    console.log(`This is the EVENT ${event}`);
-    if (event.key === "Enter") {
-      navigate("/search-card");
-    }
+  const getBack = () => {
+    navigate("/search-card"); // Navigate to the SearchCard route
   };
 
   const openBang = (event) => {

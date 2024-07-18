@@ -3,7 +3,7 @@
   import { onDestroy, onMount } from "svelte";
   import validUrl from "valid-url";
   import SettingsIcon from "../../../assets/settings.svg";
-  import { updateFilteredBookmarks } from "../utils/bookmarks";
+  import { updateFilteredBookmarks, fetchBookmarks } from "../utils/bookmarks";
   import { setBookmarks, updateCountById } from "../utils/localStorage";
   import { makeBrowsableURL } from "../utils/urls";
   import {
@@ -25,8 +25,20 @@
     if (!bookmarksTree) {
       await setBookmarks();
     }
+    const fetchedBookmarks = await fetchBookmarks();
 
     $bookmarksArray = await storage.getItem("local:bookmarksTree");
+    $bookmarksArray.sort((a, b) => b.count - a.count);
+
+    if (fetchedBookmarks.length !== $bookmarksArray.length) {
+      const lengthDifference = fetchedBookmarks.length - $bookmarksArray.length;
+
+      if (lengthDifference > 0) {
+        const elementsToAdd = fetchedBookmarks.slice(-lengthDifference);
+        $bookmarksArray.push(...elementsToAdd);
+        await storage.setItem("local:bookmarksTree", $bookmarksArray);
+      }
+    }
 
     bookmarksArray.subscribe((bookmarks) => {
       updateFilteredBookmarks(bookmarks, $searchQuery);
