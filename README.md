@@ -1,4 +1,14 @@
-# Fuzzytab
+<h2 align="center"> Fuzzytab </h2>
+
+
+<p align="center">
+        <img src="https://img.shields.io/badge/Version-0.5.0-informational.svg?style=for-the-badge&logo=hackthebox&color=161616&logoColor=42be65&labelColor=dde1e6"></a>
+    <img src="https://img.shields.io/github/last-commit/vasujain275/fuzzytab?style=for-the-badge&labelColor=dde1e6&color=161616"/>
+    <img src="https://img.shields.io/github/repo-size/vasujain275/fuzzytab?style=for-the-badge&labelColor=dde1e6&color=161616"/>
+  </a>
+</p>
+
+
 
 A keyboard focused fzf inspired browser extension for blazingly fast navigation.
 
