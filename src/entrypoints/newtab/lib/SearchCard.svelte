@@ -18,6 +18,8 @@
 
   let inputElement;
 
+
+
   onMount(async () => {
     inputElement.focus();
     const bookmarksTree = await storage.getItem("local:bookmarksTree");
@@ -39,6 +41,8 @@
         await storage.setItem("local:bookmarksTree", $bookmarksArray);
       }
     }
+
+
 
     bookmarksArray.subscribe((bookmarks) => {
       updateFilteredBookmarks(bookmarks, $searchQuery);
@@ -93,25 +97,26 @@
   };
 </script>
 
-<main class="p-6 w-full h-full grid grid-rows-12">
-  <div class="row-span-2">
-    <div class="w-full h-9 grid grid-cols-12 text-white">
+
+<main class="p-6 w-full h-full flex flex-col bg-[var(--color-base00)] text-[var(--color-base05)]">
+  <div class="mb-6">
+    <div class="w-full flex items-center space-x-4">
       <!-- Settings Icon -->
-      <div class="col-span-1 p-4 flex justify-center items-center">
-        <button class="focus:outline-none relative" on:click={openSettings}>
+      <div class="flex items-center justify-center w-12 h-12">
+        <button class="focus:outline-none relative p-2 hover:bg-[var(--color-base01)] rounded-full transition duration-300" on:click={openSettings}>
           <img
             src={SettingsIcon}
             alt="Settings"
-            class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-8 lg:h-8 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+            class="w-7 h-7 sm:w-8 sm:h-8 cursor-pointer"
           />
         </button>
       </div>
       <!-- Search Input -->
-      <div class="col-span-10 flex items-center">
+      <div class="flex-grow">
         <input
           type="text"
           placeholder="Search bookmarks"
-          class="w-full h-full bg-zinc-500 text-white px-4 py-1 rounded-md text-lg focus:outline-none"
+          class="w-full bg-[var(--color-base01)] text-[var(--color-base05)] px-6 py-3 rounded-full text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-base0B)]"
           on:keydown={openLink}
           bind:value={$searchQuery}
           bind:this={inputElement}
@@ -119,41 +124,38 @@
         />
       </div>
       <!-- Count Display -->
-      <div class="col-span-1 flex justify-center items-center">
-        <h1 class="text-xs sm:text-sm md:text-base lg:text-lg">0</h1>
+      <div class="flex items-center justify-center w-12 h-12">
+        <h1 class="text-base sm:text-lg font-semibold">{0}</h1>
       </div>
     </div>
   </div>
   <!-- Bookmarks List -->
-  <div class="row-span-10 overflow-y-auto">
+  <div class="flex-grow overflow-y-auto scrollbar-hide">
     {#if $errorMessage}
-      <p class="text-red-500">{$errorMessage}</p>
+      <p class="text-[var(--color-base08)] text-base sm:text-lg">{$errorMessage}</p>
     {:else}
-      <ul class="space-y-2">
+      <ul class="space-y-4">
         {#each $filteredBookmarks as bookmark, index (bookmark.id)}
           <li
-            class="flex items-center justify-between p-2 hover:bg-gray-700 rounded-lg {index ===
-            $selectedBookmarkIndex
-              ? 'bg-gray-700'
-              : ''}"
+            class="flex items-center justify-between p-4 hover:bg-[var(--color-base01)] rounded-xl transition duration-300"
+            class:bg-[var(--color-base02)]={index === $selectedBookmarkIndex}
+            class:bg-[var(--color-base01)]={index !== $selectedBookmarkIndex}
             on:click={() => handleBookmarkClick(bookmark, index)}
           >
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-4">
               <!-- Initial Character Circle -->
-              <div
-                class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center"
-              >
-                <span class="text-sm text-black">{bookmark.title[0]}</span>
+              <div class="w-10 h-10 bg-[var(--color-base02)] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-lg sm:text-xl font-semibold">{bookmark.title[0]}</span>
               </div>
               <!-- Bookmark Title -->
-              <div>
-                <h2 class="text-lg font-semibold text-white">
+              <div class="overflow-hidden">
+                <h2 class="text-base sm:text-lg font-semibold truncate">
                   {bookmark.title}
                 </h2>
               </div>
             </div>
             <!-- Bookmark Count -->
-            <div class="text-white">
+            <div class="text-[var(--color-base04)] text-base sm:text-lg font-semibold ml-4">
               {bookmark.count}
             </div>
           </li>
@@ -162,3 +164,16 @@
     {/if}
   </div>
 </main>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+</style>

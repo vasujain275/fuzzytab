@@ -3,7 +3,7 @@
   "description": "A keyboard focused fzf inspired browser extension for blazingly fast navigation.",
   "private": true,
   "type": "module",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scripts": {
     "dev:chrome": "wxt",
     "dev:firefox": "wxt -b firefox",
