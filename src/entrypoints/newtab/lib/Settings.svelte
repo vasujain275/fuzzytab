@@ -5,33 +5,74 @@
   const getBack = () => {
     navigate("/search-card"); // Navigate to the SearchCard route
   };
+
+  const themes = [
+    "rosePineDawn",
+    "rosePineMoon",
+    "catppuccinLatte",
+    "catppuccinMocha",
+    "solarizedDark",
+    "solarizedLight",
+    "dracula",
+    "gruvboxDark",
+    "gruvboxLight",
+    "nord",
+    "oneDark",
+    "tomorrowNight",
+    "monokai",
+    "material",
+    "ocean",
+    "setiUI",
+  ];
+
+  function changeTheme(theme) {
+    // Implement theme change logic here
+    console.log(`Theme changed to: ${theme}`);
+  }
 </script>
 
-<main class="p-6 w-full h-full grid grid-rows-12">
-  <div class="row-span-2">
-    <div class="w-full h-9 grid grid-cols-12 text-white">
+<main
+  class="p-6 w-full h-full flex flex-col bg-[var(--color-base00)] text-[var(--color-base05)]"
+>
+  <div class="mb-6">
+    <div class="w-full flex items-center space-x-4">
       <!-- Back Icon -->
-      <div class="col-span-1 p-4 flex justify-center items-center">
-        <button class="focus:outline-none relative" on:click={getBack}>
+      <div class="flex items-center justify-center w-12 h-12">
+        <button
+          class="focus:outline-none relative p-2 hover:bg-[var(--color-base01)] rounded-full transition duration-300"
+          on:click={getBack}
+        >
           <img
             src={BackIcon}
             alt="Back"
-            class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-8 lg:h-8 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+            class="w-7 h-7 sm:w-8 sm:h-8 cursor-pointer"
           />
         </button>
       </div>
       <!-- Settings Title -->
-      <div class="col-span-10 flex items-center">
-        <h1 class="font-bold text-xl">Settings</h1>
+      <div class="flex-grow">
+        <h1 class="text-xl font-bold">Settings</h1>
       </div>
       <!-- Count Display -->
-      <div class="col-span-1 flex justify-center items-center">
-        <h1 class="text-xs sm:text-sm md:text-base lg:text-lg">0</h1>
+      <div class="flex items-center justify-center w-12 h-12">
+        <h1 class="text-base sm:text-lg font-semibold">0</h1>
       </div>
     </div>
   </div>
   <!-- Settings Here -->
-  <div class="row-span-10 overflow-y-auto">
+  <div class="flex-grow overflow-y-auto scrollbar-hide">
     <!-- Settings to add here -->
   </div>
 </main>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>
