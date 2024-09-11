@@ -5,7 +5,8 @@
   import Settings from "./lib/Settings.svelte";
   import BangSearch from "./lib/BangSearch.svelte";
   import { onMount } from "svelte";
-  import * as colors from "./utils/colors";
+  import { applyTheme } from "./utils/misc.js";
+  import { currentTheme } from "./utils/store.js";
 
   let searchInput;
 
@@ -25,15 +26,17 @@
     // Focus on the search input when the component mounts
     focusSearchInput();
 
-    console.log(colors);
-    Object.entries(colors["rosePineMoon"]).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(`--color-${key}`, value);
+    // Apply the current theme
+    const unsubscribe = currentTheme.subscribe((theme) => {
+      applyTheme(theme);
     });
 
     // Listen for tab creation events
     browser.tabs.onCreated.addListener(() => {
       focusSearchInput();
     });
+
+    return unsubscribe;
   });
 </script>
 

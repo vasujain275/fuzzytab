@@ -7,6 +7,7 @@ const filteredBookmarks = writable([]);
 const selectedBookmarkIndex = writable(-1);
 const bookmarksArray = writable([]);
 const errorMessage = writable(null);
+const currentTheme = writable("rosePineMoon"); // Default theme
 
 export {
   searchQuery,
@@ -16,4 +17,5 @@ export {
   errorMessage,
   bangUrl,
   bangQuery,
+  currentTheme,
 };

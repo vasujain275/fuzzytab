@@ -1,33 +1,28 @@
 <script>
   import { navigate } from "svelte-routing";
   import BackIcon from "../../../assets/backIcon.svg";
+  import * as themes from "../utils/colors";
+  import { applyTheme } from "../utils/misc.js";
+  import { currentTheme } from "../utils/store.js";
+  import { onMount } from "svelte";
+
+  let selectedTheme;
+
+  onMount(() => {
+    const unsubscribe = currentTheme.subscribe((value) => {
+      selectedTheme = value;
+    });
+
+    return unsubscribe;
+  });
 
   const getBack = () => {
-    navigate("/search-card"); // Navigate to the SearchCard route
+    navigate("/search-card");
   };
 
-  const themes = [
-    "rosePineDawn",
-    "rosePineMoon",
-    "catppuccinLatte",
-    "catppuccinMocha",
-    "solarizedDark",
-    "solarizedLight",
-    "dracula",
-    "gruvboxDark",
-    "gruvboxLight",
-    "nord",
-    "oneDark",
-    "tomorrowNight",
-    "monokai",
-    "material",
-    "ocean",
-    "setiUI",
-  ];
-
-  function changeTheme(theme) {
-    // Implement theme change logic here
-    console.log(`Theme changed to: ${theme}`);
+  function changeTheme(event) {
+    const newTheme = event.target.value;
+    applyTheme(newTheme);
   }
 </script>
 
@@ -36,7 +31,6 @@
 >
   <div class="mb-6">
     <div class="w-full flex items-center space-x-4">
-      <!-- Back Icon -->
       <div class="flex items-center justify-center w-12 h-12">
         <button
           class="focus:outline-none relative p-2 hover:bg-[var(--color-base01)] rounded-full transition duration-300"
@@ -49,30 +43,36 @@
           />
         </button>
       </div>
-      <!-- Settings Title -->
       <div class="flex-grow">
         <h1 class="text-xl font-bold">Settings</h1>
       </div>
-      <!-- Count Display -->
       <div class="flex items-center justify-center w-12 h-12">
         <h1 class="text-base sm:text-lg font-semibold">0</h1>
       </div>
     </div>
   </div>
-  <!-- Settings Here -->
   <div class="flex-grow overflow-y-auto scrollbar-hide">
-    <!-- Settings to add here -->
+    <div class="mb-6">
+      <h2 class="text-lg font-semibold mb-2">Change Theme</h2>
+      <select
+        bind:value={selectedTheme}
+        on:change={changeTheme}
+        class="w-full p-2 bg-[var(--color-base01)] border border-[var(--color-base03)] rounded-md"
+      >
+        {#each Object.keys(themes) as theme}
+          <option value={theme}>{theme}</option>
+        {/each}
+      </select>
+    </div>
   </div>
 </main>
 
 <style>
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 </style>
