@@ -3,7 +3,6 @@ import { bookmarksArray, bookmarksTreeStorage } from "./store";
 
 async function setBookmarks() {
   const bookmarks = await fetchBookmarks();
-  //await storage.setItem("local:bookmarksTree", bookmarks);
   bookmarksArray.set(bookmarks);
   console.log(bookmarksArray);
   await bookmarksTreeStorage.setValue(bookmarks);

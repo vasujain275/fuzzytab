@@ -14,6 +14,10 @@ const bookmarksTreeStorage = storage.defineItem("local:bookmarksTreeStorage", {
   fallback: {},
 });
 
+const currentThemeStorage = storage.defineItem("local:currentThemeStorage", {
+  fallback: "rosePineMoon",
+});
+
 export {
   searchQuery,
   filteredBookmarks,
@@ -24,4 +28,5 @@ export {
   bangQuery,
   currentTheme,
   bookmarksTreeStorage,
+  currentThemeStorage,
 };
