@@ -13,6 +13,7 @@
     filteredBookmarks,
     selectedBookmarkIndex,
     bangUrl,
+    bookmarksTreeStorage,
   } from "../utils/store";
   import { navigate } from "svelte-routing";
 
@@ -20,29 +21,48 @@
 
   onMount(async () => {
     inputElement.focus();
-    const bookmarksTree = await storage.getItem("local:bookmarksTree");
-
-    if (!bookmarksTree) {
+    const bookmarksTree = await bookmarksTreeStorage.getValue(
+      "local:bookmarksTreeStorage"
+    );
+    if (bookmarksTree === null) {
       await setBookmarks();
     }
+
     const fetchedBookmarks = await fetchBookmarks();
+    $bookmarksArray = bookmarksTree || [];
 
-    $bookmarksArray = await storage.getItem("local:bookmarksTree");
-    $bookmarksArray.sort((a, b) => b.count - a.count);
+    // Create a map of existing bookmarks for faster lookup
+    const existingBookmarksMap = new Map($bookmarksArray.map((b) => [b.id, b]));
 
-    if (fetchedBookmarks.length !== $bookmarksArray.length) {
-      const lengthDifference = fetchedBookmarks.length - $bookmarksArray.length;
+    // Process fetched bookmarks
+    for (const fetchedBookmark of fetchedBookmarks) {
+      const existingBookmark = existingBookmarksMap.get(fetchedBookmark.id);
 
-      if (lengthDifference > 0) {
-        const elementsToAdd = fetchedBookmarks.slice(-lengthDifference);
-        $bookmarksArray.push(...elementsToAdd);
-        await storage.setItem("local:bookmarksTree", $bookmarksArray);
+      if (existingBookmark) {
+        // Update existing bookmark if needed
+        Object.assign(existingBookmark, fetchedBookmark);
+        existingBookmarksMap.delete(fetchedBookmark.id);
+      } else {
+        // Add new bookmark
+        $bookmarksArray.push(fetchedBookmark);
       }
     }
+
+    // Remove bookmarks that are no longer in fetchedBookmarks
+    $bookmarksArray = $bookmarksArray.filter(
+      (b) => !existingBookmarksMap.has(b.id)
+    );
+
+    // Sort bookmarks by count
+    $bookmarksArray.sort((a, b) => b.count - a.count);
+
+    // Save updated bookmarks
+    await storage.setItem("local:bookmarksTree", $bookmarksArray);
 
     bookmarksArray.subscribe((bookmarks) => {
       updateFilteredBookmarks(bookmarks, $searchQuery);
     });
+
     searchQuery.subscribe((query) => {
       updateFilteredBookmarks($bookmarksArray, query);
     });

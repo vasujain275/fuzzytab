@@ -1,11 +1,12 @@
 import { fetchBookmarks } from "./bookmarks";
-import { storage } from "wxt/storage";
-import { bookmarksArray } from "./store";
+import { bookmarksArray, bookmarksTreeStorage } from "./store";
 
 async function setBookmarks() {
   const bookmarks = await fetchBookmarks();
-  await storage.setItem("local:bookmarksTree", bookmarks);
+  //await storage.setItem("local:bookmarksTree", bookmarks);
   bookmarksArray.set(bookmarks);
+  console.log(bookmarksArray);
+  await bookmarksTreeStorage.setValue(bookmarks);
 }
 
 function updateCountById(id) {

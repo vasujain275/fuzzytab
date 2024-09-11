@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { storage } from "wxt/storage";
 
 const searchQuery = writable("");
 const bangQuery = writable("");
@@ -9,6 +10,10 @@ const bookmarksArray = writable([]);
 const errorMessage = writable(null);
 const currentTheme = writable("rosePineMoon"); // Default theme
 
+const bookmarksTreeStorage = storage.defineItem("local:bookmarksTreeStorage", {
+  fallback: {},
+});
+
 export {
   searchQuery,
   filteredBookmarks,
@@ -18,4 +23,5 @@ export {
   bangUrl,
   bangQuery,
   currentTheme,
+  bookmarksTreeStorage,
 };
