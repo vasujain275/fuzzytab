@@ -7,22 +7,32 @@
   import { onMount } from "svelte";
   import * as colors from "./utils/colors";
 
+  let searchInput;
+
   if (location.search !== "?x") {
     location.search = "?x";
     throw new Error(); // load everything on the next page;
     // stop execution on this page
   }
-  let tab;
-  const focusTab = async () => {
-    [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    //console.log(tab);
+
+  const focusSearchInput = () => {
+    if (searchInput) {
+      searchInput.focus();
+    }
   };
 
   onMount(async () => {
-    await focusTab();
+    // Focus on the search input when the component mounts
+    focusSearchInput();
+
     console.log(colors);
     Object.entries(colors["rosePineMoon"]).forEach(([key, value]) => {
       document.documentElement.style.setProperty(`--color-${key}`, value);
+    });
+
+    // Listen for tab creation events
+    browser.tabs.onCreated.addListener(() => {
+      focusSearchInput();
     });
   });
 </script>
@@ -34,8 +44,12 @@
     class="w-2/5 h-3/4 bg-[var(--color-base01)] text-[var(--color-base05)] rounded-lg shadow-xl overflow-hidden"
   >
     <Router>
-      <Route path="/*" component={SearchCard} />
-      <Route path="/search-card" component={SearchCard} />
+      <Route path="/*">
+        <SearchCard bind:searchInput />
+      </Route>
+      <Route path="/search-card">
+        <SearchCard bind:searchInput />
+      </Route>
       <Route path="/bang-search" component={BangSearch} />
       <Route path="/settings" component={Settings} />
     </Router>

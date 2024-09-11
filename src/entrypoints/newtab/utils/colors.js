@@ -246,41 +246,41 @@ const monokai = {
 };
 
 const tokyoNight = {
-  base00: "#1a1b26",
-  base01: "#1f2335",
-  base02: "#24283b",
-  base03: "#414868",
-  base04: "#787c99",
-  base05: "#a9b1d6",
-  base06: "#cbccd1",
-  base07: "#d7daff",
-  base08: "#f7768e",
-  base09: "#ff9e64",
-  base0A: "#e0af68",
-  base0B: "#9ece6a",
-  base0C: "#2ac3de",
-  base0D: "#7aa2f7",
-  base0E: "#bb9af7",
-  base0F: "#c0caf5",
+  base00: "24283B",
+  base01: "16161E",
+  base02: "343A52",
+  base03: "444B6A",
+  base04: "787C99",
+  base05: "A9B1D6",
+  base06: "CBCCD1",
+  base07: "D5D6DB",
+  base08: "C0CAF5",
+  base09: "A9B1D6",
+  base0A: "0DB9D7",
+  base0B: "9ECE6A",
+  base0C: "B4F9F8",
+  base0D: "2AC3DE",
+  base0E: "BB9AF7",
+  base0F: "F7768E",
 };
 
 const rosePineMain = {
-  base00: "#191724", // Base
-  base01: "#1f1d2e", // Surface
-  base02: "#26233a", // Overlay
-  base03: "#6e6a86", // Muted
-  base04: "#908caa", // Subtle
-  base05: "#e0def4", // Text
-  base06: "#e0def4", // Highlight
-  base07: "#524f67", // Highlight High
-  base08: "#eb6f92", // Love
-  base09: "#f6c177", // Gold
-  base0A: "#ebbcba", // Rose
-  base0B: "#31748f", // Pine
-  base0C: "#9ccfd8", // Foam
-  base0D: "#c4a7e7", // Iris
-  base0E: "#f6c177", // Gold (reused)
-  base0F: "#524f67", // Highlight High (reused)
+  base00: "#191724",
+  base01: "#1f1d2e",
+  base02: "#26233a",
+  base03: "#6e6a86",
+  base04: "#908caa",
+  base05: "#e0def4",
+  base06: "#e0def4",
+  base07: "#524f67",
+  base08: "#eb6f92",
+  base09: "#f6c177",
+  base0A: "#ebbcba",
+  base0B: "#31748f",
+  base0C: "#9ccfd8",
+  base0D: "#c4a7e7",
+  base0E: "#f6c177",
+  base0F: "#524f67",
 };
 
 export {

@@ -3,7 +3,7 @@ import { defineConfig } from "wxt";
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   manifest: {
-    permissions: ["bookmarks", "tabs", "storage"],
+    permissions: ["bookmarks", "tabs", "storage", "contextualIdentities"],
     browser_specific_settings: {
       gecko: {
         id: "fuzzytab@vasujain.me",
