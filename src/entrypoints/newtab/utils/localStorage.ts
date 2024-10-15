@@ -8,7 +8,7 @@ async function setBookmarks() {
   await bookmarksTreeStorage.setValue(bookmarks);
 }
 
-function updateCountById(id) {
+function updateCountById(id: string) {
   bookmarksArray.update((arr) => {
     return arr.map((obj) => {
       if (obj.id === id) {

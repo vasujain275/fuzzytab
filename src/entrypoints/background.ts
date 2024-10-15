@@ -6,7 +6,7 @@ export default defineBackground(() => {
       url: "newtab.html",
     });
   }
-  function pushStart(data) {
+  function pushStart(data: any) {
     if (data == null) {
       loadStart();
     } else {

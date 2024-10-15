@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { storage } from "wxt/storage";
   import { onDestroy, onMount } from "svelte";
   import validUrl from "valid-url";

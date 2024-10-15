@@ -1,6 +1,6 @@
 import validUrl from "valid-url";
 
-function makeBrowsableURL(url) {
+function makeBrowsableURL(url: string): string | null {
   if (validUrl.isUri(url)) {
     return null;
   }

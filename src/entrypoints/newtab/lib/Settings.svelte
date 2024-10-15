@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   import { navigate } from "svelte-routing";
   import BackIcon from "../../../assets/backIcon.svg";
   import * as themes from "../utils/colors";
-  import { applyTheme } from "../utils/misc.js";
-  import { currentTheme } from "../utils/store.js";
+  import { applyTheme } from "../utils/misc";
+  import { currentTheme } from "../utils/store";
   import { onMount } from "svelte";
 
   let selectedTheme;

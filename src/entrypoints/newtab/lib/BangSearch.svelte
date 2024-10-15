@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { navigate } from "svelte-routing";
   import BackIcon from "../../../assets/backIcon.svg";
   import { bangQuery, bangUrl } from "../utils/store";

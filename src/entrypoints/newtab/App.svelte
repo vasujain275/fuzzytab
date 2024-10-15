@@ -5,8 +5,8 @@
   import Settings from "./lib/Settings.svelte";
   import BangSearch from "./lib/BangSearch.svelte";
   import { onMount } from "svelte";
-  import { applyTheme } from "./utils/misc.js";
-  import { currentTheme } from "./utils/store.js";
+  import { applyTheme } from "./utils/misc";
+  import { currentTheme } from "./utils/store";
 
   let searchInput;
 
