@@ -1,7 +1,7 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
   import BackIcon from "../../../assets/backIcon.svg";
-  import * as themes from "../utils/colors";
+  import colors from "../utils/colors.json";
   import { applyTheme } from "../utils/misc";
   import { currentTheme } from "../utils/store";
   import { onMount } from "svelte";
@@ -59,7 +59,7 @@
         on:change={changeTheme}
         class="w-full p-2 bg-[var(--color-base01)] border border-[var(--color-base03)] rounded-md"
       >
-        {#each Object.keys(themes) as theme}
+        {#each Theme as theme}
           <option value={theme}>{theme}</option>
         {/each}
       </select>
