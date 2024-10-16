@@ -1,6 +1,14 @@
-# Fuzzytab
+<p align="center">
+  <img src="docs/FuzzyTab-Logo.png" alt="FuzzyTab Logo">
+</p>
 
-A keyboard focused fzf inspired browser extension for blazingly fast navigation.
+<p align="center">
+	<a href="https://github.com/catppuccin/github-file-explorer-icons/stargazers"><img src="https://img.shields.io/github/stars/vasujain275/fuzzytab?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
+	<a href="https://github.com/catppuccin/github-file-explorer-icons/issues"><img src="https://img.shields.io/github/issues/vasujain275/fuzzytab?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
+	<a href="https://github.com/catppuccin/github-file-explorer-icons/contributors"><img src="https://img.shields.io/github/contributors/vasujain275/fuzzytab?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+</p>
+
+> A keyboard focused fzf inspired browser extension for blazingly fast navigation.
 
 ## Development Setup
 
