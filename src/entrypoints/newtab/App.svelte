@@ -4,24 +4,19 @@
   import Settings from "./lib/Settings.svelte";
   import BangSearch from "./lib/BangSearch.svelte";
   import { onMount } from "svelte";
-  import { applyTheme } from "./utils/misc";
   import { currentTheme } from "./utils/store";
-
-  let searchInput;
 
   if (location.search !== "?x") {
     location.search = "?x";
   }
 
-  const focusSearchInput = () => {
-    if (searchInput) {
-      searchInput.focus();
-    }
-  };
-
   onMount(async () => {
-    focusSearchInput();
-    applyTheme(currentTheme);
+    currentTheme.subscribe((theme) => {
+      console.log(theme);
+      Object.entries(theme).forEach(([key, value]) => {
+        document.documentElement.style.setProperty(`--color-${key}`, value);
+      });
+    });
   });
 </script>
 
@@ -33,10 +28,10 @@
   >
     <Router>
       <Route path="/*">
-        <SearchCard bind:searchInput />
+        <SearchCard />
       </Route>
       <Route path="/search-card">
-        <SearchCard bind:searchInput />
+        <SearchCard />
       </Route>
       <Route path="/bang-search" component={BangSearch} />
       <Route path="/settings" component={Settings} />

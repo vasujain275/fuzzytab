@@ -2,19 +2,9 @@
   import { navigate } from "svelte-routing";
   import BackIcon from "../../../assets/backIcon.svg";
   import colors from "../utils/colors.json";
-  import { applyTheme } from "../utils/misc";
   import { currentTheme } from "../utils/store";
-  import { onMount } from "svelte";
 
   let selectedTheme;
-
-  onMount(() => {
-    const unsubscribe = currentTheme.subscribe((value) => {
-      selectedTheme = value;
-    });
-
-    return unsubscribe;
-  });
 
   const getBack = () => {
     navigate("/search-card");
@@ -22,7 +12,7 @@
 
   function changeTheme(event) {
     const newTheme = event.target.value;
-    applyTheme(newTheme);
+    currentTheme.set(newTheme);
   }
 </script>
 
@@ -59,7 +49,7 @@
         on:change={changeTheme}
         class="w-full p-2 bg-[var(--color-base01)] border border-[var(--color-base03)] rounded-md"
       >
-        {#each Theme as theme}
+        {#each Object.keys(colors) as theme}
           <option value={theme}>{theme}</option>
         {/each}
       </select>
